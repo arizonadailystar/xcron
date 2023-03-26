@@ -7,7 +7,7 @@
   $xcronFilePath = __FILE__;
 
 	if ($xcronErrorCode) {
-		$returnToXcron = array(
+		$xcronReturn = array(
 			"success" => false,
 			"errorcode" => $xcronErrorCode,
 			"error" => $xcronErrorMsg,
@@ -19,11 +19,11 @@
       "hostname" => $xcronHostName,
       "filepath" => $xcronFilePath
 		);
-		echo json_encode($returnToXcron, JSON_UNESCAPED_SLASHES) . "\n";
+		echo json_encode($xcronReturn, JSON_UNESCAPED_SLASHES) . "\n";
 		exit();
 	}
 
-  $returnToXcron = array(
+  $xcronReturn = array(
     "success" => true,
     "update_schedule" => time() + 120,
 		"stats" => array(
@@ -33,7 +33,7 @@
     "hostname" => $xcronHostName,
     "filepath" => $xcronFilePath
 );
-  echo json_encode($returnToXcron, JSON_UNESCAPED_SLASHES) . "\n";
+  echo json_encode($xcronReturn, JSON_UNESCAPED_SLASHES) . "\n";
   exit();
 
 ?>
