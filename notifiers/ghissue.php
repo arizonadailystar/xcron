@@ -9,6 +9,7 @@
 		{
 			if (!isset($notifyinfo["repo"])) return array("success" => false, "error" => "Missing repository", "errorcode" => "missing_repository");
 			if (!isset($notifyinfo["code_format"]))  return array("success" => false, "error" => "Missing code_format bool. Set to true if you want your output wrapped in pre tags.", "errorcode" => "missing_code_format");
+      if (!isset($notifyinfo["token"])) return array("success" => false, "error" => "Missing GitHub token", "errorcode" => "missing_github_token");
 			return array("success" => true);
 		}
 
@@ -16,17 +17,22 @@
 		{
 			$body = "";
 				
+			// append the json output if it exists
+			if (isset($data["success"])) {
+				$jsonData = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
+				$body .= str_replace('"', '\"', $jsonData);
+			}
+
 			// append a template if there is one
 			$template = "/var/scripts/xcron/templates/" . $userdisp . "--" . $name . ".md";
 			if (file_exists($template)) {
 				$body .= file_get_contents($template);
 			}
 
-			// append the log file if there is one
+			// append the log file if it exists
 			$log = "/var/log/xcron/" . $userdisp . "--" . $name . ".log";
 			if (file_exists($log)) {
-				if ($notifyinfo["code_format"])
-				{
+				if ($notifyinfo["code_format"]) {
 					$body .= "```\n" . file_get_contents($log) . "```\n";	
 				} else {
 					$body .= file_get_contents($log);	
@@ -46,7 +52,7 @@
 			$cmd .= " -b " . "\"" . $body . "\"";
 
 			// execute the command
-			putenv("GH_TOKEN=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");
+			putenv($notifyinfo["token"]);
 			$output = shell_exec($cmd);
 
 			return array("success" => true);
