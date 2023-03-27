@@ -18,9 +18,12 @@
 		public function Notify($notifykey, &$notifyinfo, $numerrors, &$sinfo, $schedulekey, $name, $userdisp, $data) {
 			$body = "";
 			
+			// append the schedule name so it's the first thing we see in notifications
+			$body .= "**Schedule:** " . $name . "\n\n";
+
 			// append the json output if it exists
 			if (isset($data["success"])) {
-				$jsonData = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
+				$jsonData = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n\n";
 				$body .= str_replace('"', '\"', $jsonData);
 			}
 
