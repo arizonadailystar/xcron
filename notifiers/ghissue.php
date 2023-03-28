@@ -22,8 +22,7 @@
 				
 			// append the json output if it exists
 			if (isset($data["success"])) {
-				$jsonData = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n\n";
-				$body .= str_replace('"', '\"', $jsonData);
+				$body .= json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n\n";
 			}
 
 			// append a template if there is one
@@ -45,6 +44,9 @@
 			// set the title
 			$title = (isset($notifyinfo["prefix"]) ? $notifyinfo["prefix"] : "") . $name;
 
+			// escape quotes in the body
+			$body = str_replace('"', '\"', $body);
+
 			// build the command to execute
 			$cmd = "/usr/bin/gh issue create";
 			$cmd .= " -R " . $notifyinfo["repo"];
@@ -55,7 +57,7 @@
 			$cmd .= " -b " . "\"" . $body . "\"";
 
 			// execute the command
-			putenv($notifyinfo["token"]);
+			putenv("GH_TOKEN=" . $notifyinfo["token"]);
 			$output = shell_exec($cmd);
 
 			return array("success" => true);

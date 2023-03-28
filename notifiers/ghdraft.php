@@ -19,13 +19,7 @@
 			$body = "";
 			
 			// append the schedule name so it's the first thing we see in notifications
-			$body .= "**Schedule:** " . $name . "\n\n";
-
-			// append the json output if it exists
-			if (isset($data["success"])) {
-				$jsonData = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n\n";
-				$body .= str_replace('"', '\"', $jsonData);
-			}
+			//$body .= "**Schedule:** " . $name . "\n\n";
 
 			// append a template if there is one
 			$template = "/var/scripts/xcron/templates/" . $userdisp . "--" . $name . ".md";
@@ -43,12 +37,20 @@
 				}
 			}
 
+			// append the json output if it exists
+			if (isset($data["success"])) {
+				$body .= json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n\n";
+			}
+
 			$project = $notifyinfo["project"];
 			$title = (isset($notifyinfo["prefix"]) ? $notifyinfo["prefix"] : "") . $name;
 
+			// escape quotes in the body
+			$body = str_replace('"', '\"', $body);
+
 			$cmd = "/usr/bin/gh api graphql -f query='mutation {addProjectV2DraftIssue(input: {projectId: \"$project\" title: \"$title\" body: \"$body\"}) {projectItem {id}}}'";
 
-			putenv($notifyinfo["token"]);
+			putenv("GH_TOKEN=" . $notifyinfo["token"]);
 			$output = shell_exec($cmd);
 			
 			return array("success" => true);

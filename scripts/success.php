@@ -5,6 +5,7 @@
 	$xcronErrorMsg = "An error has occurred";
   $xcronHostName = gethostname();
   $xcronFilePath = __FILE__;
+	$xcronDateTime = date("Y-m-d H:i:s");
 
 	if ($xcronErrorCode) {
 		$xcronReturn = array(
@@ -16,7 +17,8 @@
 				"failure" => 1
       ),
       "hostname" => $xcronHostName,
-      "filepath" => $xcronFilePath
+      "filepath" => $xcronFilePath,
+			"triggered" => $xcronDateTime
 		);
 		echo json_encode($xcronReturn, JSON_UNESCAPED_SLASHES) . "\n";
 		exit();
@@ -29,8 +31,9 @@
       "failure" => 0
     ),
     "hostname" => $xcronHostName,
-    "filepath" => $xcronFilePath
-);
+    "filepath" => $xcronFilePath,
+		"triggered" => $xcronDateTime
+	);
   echo json_encode($xcronReturn, JSON_UNESCAPED_SLASHES) . "\n";
   exit();
 
