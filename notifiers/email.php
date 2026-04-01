@@ -183,9 +183,9 @@
     {
       if (isset($notifyinfo["error_limit"]) && $numerrors > $notifyinfo["error_limit"])  return array("success" => false, "error" => "Notification not sent due to exceeding error limit.", "errorcode" => "limit_exceeded");
 
-      $subject = (isset($notifyinfo["prefix"]) ? $notifyinfo["prefix"] : "") . $userdisp . " | " . $name . " " . (isset($data["success"]) ? ($data["success"] ? "Success" : "Failure") : "(other/test)");
+      $subject = (isset($notifyinfo["prefix"]) ? $notifyinfo["prefix"] : "") . $name . " " . (isset($data["success"]) ? ($data["success"] ? "Success" : "Failure") : "(other/test)");
 
-      $message = $userdisp . " | " . $name . "\n\n" . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+      $message = $name . "\n\n" . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
       // append the log file if it exists
       // rwisner@tucson.com
