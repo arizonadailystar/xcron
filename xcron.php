@@ -1407,6 +1407,16 @@
 									// The last command completed running.
 									XCronHelper::AddStatsResult($cachedata, $schedulekey, $name, array("runs" => 1, "triggered" => ($pinfo["triggered"] ? 1 : 0), "dates_run" => ($cachedata["stats"][$schedulekey][$name]["today"]["runs"] == 0 ? 1 : 0), "runtime" => microtime(true) - $pinfo["truestartts"]), array("runtime" => "longest_runtime"));
 
+									// Send success notification if configured.
+									if (isset($sinfo["schedule"]["notify-success"]))
+									{
+										$successdata = $pinfo["result"];
+										$successdata["output"] = ($pinfo["outputfile"] !== false) ? @file_get_contents($pinfo["outputfile"]) : $pinfo["outdata"];
+										if ($successdata["output"] === false)  $successdata["output"] = "";
+
+										XCronHelper::NotifyScheduleResult($notifiers, $cachedata, $schedules, $schedulekey, $name, $successdata, true, "notify-success");
+									}
+
 									if (!$pinfo["triggered"])  $schedulenext = true;
 									else
 									{
