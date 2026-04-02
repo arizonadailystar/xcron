@@ -2,7 +2,7 @@
 // Email notifier for xcron.
 // (C) 2022 CubicleSoft.  All Rights Reserved.
 
-class XCronNotifier_email
+class XCronNotifier_email_output
 {
   public function __construct()
   {
