@@ -28,11 +28,14 @@ class XCronNotifier_pushover
       $message .= file_get_contents($log);
     }
 
+    $title = isset($data["success"]) ? ($data["success"] ? "Success" : "Failure") : "Test";
+
     curl_setopt_array($ch = curl_init(), array(
       CURLOPT_URL => "https://api.pushover.net/1/messages.json",
       CURLOPT_POSTFIELDS => array(
         "token" => $notifyinfo["app_token"],
         "user" => $notifyinfo["user_key"],
+        "title" => $title,
         "message" => $message,
       ),
       CURLOPT_SAFE_UPLOAD => true,
